@@ -15,7 +15,7 @@ resource "aws_iam_role" "AppConfigAgentConfigurationDocumentRole" {
     ]
   })
   tags = merge({ (join("-", ["${var.service_name}", "${aws_appconfig_application.AppConfigAgentApplication.id}"])) = "AppConfigDocumentRole" },
-    var.custom_resource_tags
+    local.common_tags
   )
 }
 
@@ -52,7 +52,7 @@ resource "aws_iam_role" "UserPoolSnsRole" {
     ]
   })
   tags = merge({ (join("-", ["${var.service_name}", "${aws_appconfig_application.AppConfigAgentApplication.id}"])) = "UserPoolSnsRole" },
-    var.custom_resource_tags
+    local.common_tags
   )
 }
 
@@ -88,7 +88,7 @@ resource "aws_iam_role" "ConsoleTaskRole" {
     ]
   })
   tags = merge({ (join("-", ["${var.service_name}", "${aws_appconfig_application.AppConfigAgentApplication.id}"])) = "ConsoleTaskRole" },
-    var.custom_resource_tags
+    local.common_tags
   )
 }
 
@@ -288,13 +288,13 @@ resource "aws_iam_role_policy" "ConsoleTaskPolicy" {
         Effect = "Allow"
         Sid    = "RestrictedResources${aws_appconfig_application.AppConfigAgentApplication.id}"
         Resource = [
-          "arn:aws:iam::${var.aws_account}:role/${aws_iam_role.AgentTaskRole.name}",
-          "arn:aws:iam::${var.aws_account}:role/${aws_iam_role.AppConfigAgentConfigurationDocumentRole.name}",
-          "arn:aws:iam::${var.aws_account}:role/${aws_iam_role.ConsoleTaskRole.name}",
+          "arn:aws:iam::${local.aws_account}:role/${aws_iam_role.AgentTaskRole.name}",
+          "arn:aws:iam::${local.aws_account}:role/${aws_iam_role.AppConfigAgentConfigurationDocumentRole.name}",
+          "arn:aws:iam::${local.aws_account}:role/${aws_iam_role.ConsoleTaskRole.name}",
           "arn:aws:iam::*:role/${aws_iam_role.Ec2ContainerRole.name}",
           "arn:aws:iam::*:instance-profile/${aws_iam_role.Ec2ContainerRole.name}",
-          "arn:aws:iam::${var.aws_account}:role/${aws_iam_role.ExecutionRole.name}",
-          "arn:aws:iam::${var.aws_account}:role/${aws_iam_role.UserPoolSnsRole.name}",
+          "arn:aws:iam::${local.aws_account}:role/${aws_iam_role.ExecutionRole.name}",
+          "arn:aws:iam::${local.aws_account}:role/${aws_iam_role.UserPoolSnsRole.name}",
           local.create_event_bridge_role ? "arn:aws:iam::*:role/${aws_iam_role.EventBridgeRole[0].name}" : var.event_bridge_role_name,
           "arn:aws:appconfig:*:*:application/${aws_appconfig_application.AppConfigAgentApplication.id}/*",
           "arn:aws:appconfig:*:*:application/${aws_appconfig_application.AppConfigAgentApplication.id}",
@@ -521,7 +521,7 @@ resource "aws_iam_role" "AgentTaskRole" {
     ]
   })
   tags = merge({ (join("-", ["${var.service_name}", "${aws_appconfig_application.AppConfigAgentApplication.id}"])) = "AgentTaskRole" },
-    var.custom_resource_tags
+    local.common_tags
   )
 }
 
@@ -670,7 +670,7 @@ resource "aws_iam_role" "ExecutionRole" {
   managed_policy_arns = ["arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"]
 
   tags = merge({ (join("-", ["${var.service_name}", "${aws_appconfig_application.AppConfigAgentApplication.id}"])) = "ExecutionRole" },
-    var.custom_resource_tags
+    local.common_tags
   )
 }
 
@@ -692,7 +692,7 @@ resource "aws_iam_role" "Ec2ContainerRole" {
   managed_policy_arns = ["arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceforEC2Role"]
 
   tags = merge({ (join("-", ["${var.service_name}", "${aws_appconfig_application.AppConfigAgentApplication.id}"])) = "Ec2ContainerRole" },
-    var.custom_resource_tags
+    local.common_tags
   )
 }
 
@@ -720,8 +720,8 @@ resource "aws_iam_role_policy" "Ec2ContainerPolicy" {
           "ec2:ModifyInstanceAttribute"
         ]
         Resource = [
-          "arn:aws:ec2:*:${var.aws_account}:*",
-          "arn:aws:ec2:*:${var.aws_account}:volume/*",
+          "arn:aws:ec2:*:${local.aws_account}:*",
+          "arn:aws:ec2:*:${local.aws_account}:volume/*",
           "arn:aws:ec2:*::snapshot/*"
         ]
       },
@@ -732,10 +732,10 @@ resource "aws_iam_role_policy" "Ec2ContainerPolicy" {
           "ec2:CreateTags"
         ]
         Resource = [
-          "arn:aws:ec2:*:${var.aws_account}:*",
+          "arn:aws:ec2:*:${local.aws_account}:*",
           "arn:aws:ec2:*::image/*",
           "arn:aws:ec2:*::snapshot/*",
-          "arn:aws:ec2:*:${var.aws_account}:volume/*"
+          "arn:aws:ec2:*:${local.aws_account}:volume/*"
         ]
       },
       {
@@ -807,7 +807,7 @@ resource "aws_iam_policy" "EventBridgePolicy" {
           "events:PutEvents"
         ]
         Resource = [
-          "arn:aws:events:*:${var.aws_account}:event-bus/*${aws_appconfig_application.AppConfigAgentApplication.id}"
+          "arn:aws:events:*:${local.aws_account}:event-bus/*${aws_appconfig_application.AppConfigAgentApplication.id}"
         ]
       }
     ]
@@ -832,7 +832,7 @@ resource "aws_iam_policy" "proactive_notifications_event_bridge" {
           "events:PutEvents"
         ]
         Resource = [
-          "arn:aws:events:*:${var.aws_account}:event-bus/*${var.eventbridge_notifications_bus_name}"
+          "arn:aws:events:*:${local.aws_account}:event-bus/*${var.eventbridge_notifications_bus_name}"
         ]
       }
     ]

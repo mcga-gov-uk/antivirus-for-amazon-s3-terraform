@@ -22,7 +22,7 @@ resource "aws_dynamodb_table" "css-dynamodb-table" {
   }
 
   tags = merge({ (join("-", ["${var.service_name}", "${aws_appconfig_application.AppConfigAgentApplication.id}"])) = "DynamoTable" },
-    var.custom_resource_tags
+    local.common_tags
   )
 }
 
@@ -158,7 +158,7 @@ resource "aws_dynamodb_table" "ProactiveMonitorStatusesTable" {
   }
 
   tags = merge({ (join("-", ["${var.service_name}", "${aws_appconfig_application.AppConfigAgentApplication.id}"])) = "DynamoTable" },
-    var.custom_resource_tags
+    local.common_tags
   )
 }
 
@@ -199,7 +199,7 @@ resource "aws_dynamodb_table" "StorageAnalysisTable" {
   }
 
   tags = merge({ (join("-", ["${var.service_name}", "${aws_appconfig_application.AppConfigAgentApplication.id}"])) = "DynamoTable" },
-    var.custom_resource_tags
+    local.common_tags
   )
 }
 
@@ -240,7 +240,7 @@ resource "aws_dynamodb_table" "FileCountTable" {
   }
 
   tags = merge({ (join("-", ["${var.service_name}", "${aws_appconfig_application.AppConfigAgentApplication.id}"])) = "DynamoTable" },
-    var.custom_resource_tags
+    local.common_tags
   )
 }
 
@@ -281,7 +281,7 @@ resource "aws_dynamodb_table" "AgentsTable" {
   }
 
   tags = merge({ (join("-", ["${var.service_name}", "${aws_appconfig_application.AppConfigAgentApplication.id}"])) = "DynamoTable" },
-    var.custom_resource_tags
+    local.common_tags
   )
 }
 
@@ -322,7 +322,7 @@ resource "aws_dynamodb_table" "AgentDataTable" {
   }
 
   tags = merge({ (join("-", ["${var.service_name}", "${aws_appconfig_application.AppConfigAgentApplication.id}"])) = "DynamoTable" },
-    var.custom_resource_tags
+    local.common_tags
   )
 }
 
@@ -363,7 +363,7 @@ resource "aws_dynamodb_table" "BucketScanStatisticsTable" {
   }
 
   tags = merge({ (join("-", ["${var.service_name}", "${aws_appconfig_application.AppConfigAgentApplication.id}"])) = "DynamoTable" },
-    var.custom_resource_tags
+    local.common_tags
   )
 }
 
@@ -398,7 +398,7 @@ resource "aws_dynamodb_table" "BucketClassificationStatisticsTable" {
   }
 
   tags = merge({ (join("-", ["${var.service_name}", "${aws_appconfig_application.AppConfigAgentApplication.id}"])) = "DynamoTable" },
-    var.custom_resource_tags
+    local.common_tags
   )
 }
 
@@ -427,7 +427,7 @@ resource "aws_dynamodb_table" "SophosTapDataTable" {
   }
 
   tags = merge({ (join("-", ["${var.service_name}", "${aws_appconfig_application.AppConfigAgentApplication.id}"])) = "DynamoTable" },
-    var.custom_resource_tags
+    local.common_tags
   )
 }
 resource "aws_dynamodb_table" "DailyScanStatisticsTable" {
@@ -481,7 +481,7 @@ resource "aws_dynamodb_table" "DailyScanStatisticsTable" {
   }
 
   tags = merge({ (join("-", ["${var.service_name}", "${aws_appconfig_application.AppConfigAgentApplication.id}"])) = "DynamoTable" },
-    var.custom_resource_tags
+    local.common_tags
   )
 }
 
@@ -536,7 +536,7 @@ resource "aws_dynamodb_table" "MonthlyScanStatisticsTable" {
   }
 
   tags = merge({ (join("-", ["${var.service_name}", "${aws_appconfig_application.AppConfigAgentApplication.id}"])) = "DynamoTable" },
-    var.custom_resource_tags
+    local.common_tags
   )
 }
 
@@ -587,7 +587,7 @@ resource "aws_dynamodb_table" "ProblemFilesTable" {
   }
 
   tags = merge({ (join("-", ["${var.service_name}", "${aws_appconfig_application.AppConfigAgentApplication.id}"])) = "DynamoTable" },
-    var.custom_resource_tags
+    local.common_tags
   )
 }
 
@@ -627,7 +627,7 @@ resource "aws_dynamodb_table" "ClassificationResultsTable" {
   }
 
   tags = merge({ (join("-", ["${var.service_name}", "${aws_appconfig_application.AppConfigAgentApplication.id}"])) = "DynamoTable" },
-    var.custom_resource_tags
+    local.common_tags
   )
 }
 
@@ -671,7 +671,7 @@ resource "aws_dynamodb_table" "AllowedInfectedFilesTable" {
   }
 
   tags = merge({ (join("-", ["${var.service_name}", "${aws_appconfig_application.AppConfigAgentApplication.id}"])) = "DynamoTable" },
-    var.custom_resource_tags
+    local.common_tags
   )
 }
 
@@ -700,7 +700,7 @@ resource "aws_dynamodb_table" "GroupMembershipTable" {
   }
 
   tags = merge({ (join("-", ["${var.service_name}", "${aws_appconfig_application.AppConfigAgentApplication.id}"])) = "DynamoTable" },
-    var.custom_resource_tags
+    local.common_tags
   )
 }
 
@@ -758,7 +758,7 @@ resource "aws_dynamodb_table" "JobsTable" {
   }
 
   tags = merge({ (join("-", ["${var.service_name}", "${aws_appconfig_application.AppConfigAgentApplication.id}"])) = "DynamoTable" },
-    var.custom_resource_tags
+    local.common_tags
   )
 }
 
@@ -787,7 +787,7 @@ resource "aws_dynamodb_table" "LinkedAccountMembershipTable" {
   }
 
   tags = merge({ (join("-", ["${var.service_name}", "${aws_appconfig_application.AppConfigAgentApplication.id}"])) = "DynamoTable" },
-    var.custom_resource_tags
+    local.common_tags
   )
 }
 
@@ -816,7 +816,7 @@ resource "aws_dynamodb_table" "LicenseFileHistoryTable" {
   }
 
   tags = merge({ (join("-", ["${var.service_name}", "${aws_appconfig_application.AppConfigAgentApplication.id}"])) = "DynamoTable" },
-    var.custom_resource_tags
+    local.common_tags
   )
 }
 
@@ -867,7 +867,7 @@ resource "aws_dynamodb_table" "NotificationsTable" {
   }
 
   tags = merge({ (join("-", ["${var.service_name}", "${aws_appconfig_application.AppConfigAgentApplication.id}"])) = "DynamoTable" },
-    var.custom_resource_tags
+    local.common_tags
   )
 }
 
@@ -887,7 +887,7 @@ resource "aws_dynamodb_table" "fsx_volumes" {
     kms_key_arn = var.dynamo_cmk_key_arn
   }
   tags = merge({ (join("-", ["${var.service_name}", "${aws_appconfig_application.AppConfigAgentApplication.id}"])) = "DynamoTable" },
-    var.custom_resource_tags
+    local.common_tags
   )
 }
 
@@ -913,6 +913,6 @@ resource "aws_dynamodb_table" "job_networking" {
     kms_key_arn = var.dynamo_cmk_key_arn
   }
   tags = merge({ (join("-", ["${var.service_name}", "${aws_appconfig_application.AppConfigAgentApplication.id}"])) = "DynamoTable" },
-    var.custom_resource_tags
+    local.common_tags
   )
 }

@@ -24,8 +24,8 @@ resource "aws_ecs_task_definition" "TaskDefinition" {
         { "name" : "APP_CONFIG_AGENT_ENVIRONMENT_ID", "value" : aws_appconfig_environment.AppConfigAgentEnvironment.environment_id },
         { "name" : "EXECUTION_ROLE_ARN", "value" : aws_iam_role.ExecutionRole.arn },
         { "name" : "EC2_CONTAINER_ROLE_ARN", "value" : aws_iam_instance_profile.Ec2ContainerInstanceProfile.arn },
-        { "name" : "CONSOLE_VPC", "value" : var.vpc },
-        { "name" : "CONSOLE_SUBNET", "value" : "${var.subnet_a_id},${var.subnet_b_id}" },
+        { "name" : "CONSOLE_VPC", "value" : data.aws_vpc.vpc.id },
+        { "name" : "CONSOLE_SUBNET", "value" : "${local.subnet_a_id},${local.subnet_b_id}" },
         { "name" : "PARAMETER_STORE_NAME_PREFIX", "value" : "/${var.parameter_prefix}-${aws_appconfig_application.AppConfigAgentApplication.id}" },
         { "name" : "CONSOLE_SECURITY_GROUP_ID", "value" : "${var.configure_load_balancer}" ? "${aws_security_group.ContainerSecurityGroupWithLB[0].id}" : "${aws_security_group.ContainerSecurityGroup[0].id}" },
         { "name" : "AGENT_AUTO_ASSIGN_PUBLIC_IP", "value" : var.agent_auto_assign_public_ip },
@@ -85,7 +85,7 @@ resource "aws_ecs_task_definition" "TaskDefinition" {
         { "name" : "CROSS_ACCOUNT_POLICY_NAME", "value" : "${var.service_name}RemotePolicy-${aws_appconfig_application.AppConfigAgentApplication.id}" },
         { "name" : "CROSS_ACCOUNT_EVENT_BRIDGE_ROLE_NAME", "value" : aws_iam_role.EventBridgeRole[0].name },
         { "name" : "CROSS_ACCOUNT_EVENT_BRIDGE_POLICY_NAME", "value" : aws_iam_policy.EventBridgePolicy.name },
-        { "name" : "CUSTOM_RESOURCE_TAGS", "value" : join(",", [for key, value in var.custom_resource_tags : "${key}=${value}"]) },
+        { "name" : "CUSTOM_RESOURCE_TAGS", "value" : join(",", [for key, value in local.common_tags : "${key}=${value}"]) },
         { "name" : "DLP_CCL_DIR", "value" : "/cssdlp" },
         { "name" : "DLP_CCL_FILE_NAME", "value" : "PredefinedContentControlLists.xml" },
         { "name" : "PROXY_HOST", "value" : "${local.use_proxy}" ? "${var.proxy_host}" : "" },
@@ -127,6 +127,6 @@ resource "aws_ecs_task_definition" "TaskDefinition" {
     }
   ])
   tags = merge({ (join("-", ["${var.service_name}", "${aws_appconfig_application.AppConfigAgentApplication.id}"])) = "ConsoleTaskDefinition" },
-    var.custom_resource_tags
+    local.common_tags
   )
 }

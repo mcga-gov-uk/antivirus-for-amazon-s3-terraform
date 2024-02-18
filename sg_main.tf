@@ -1,21 +1,21 @@
 resource "aws_security_group" "ContainerSecurityGroup" {
   count       = var.configure_load_balancer ? 0 : 1
   description = "${var.service_name}ConsoleSecurityGroup-${aws_appconfig_application.AppConfigAgentApplication.id}"
-  vpc_id      = var.vpc
+  vpc_id      = data.aws_vpc.vpc.id
 
   ingress {
     description = "CloudStorageSec Console port 80 ingress"
     from_port   = 80
     to_port     = 80
     protocol    = "tcp"
-    cidr_blocks = ["${var.cidr}"]
+    cidr_blocks = local.cidr
   }
   ingress {
     description = "CloudStorageSec Console port 443 ingress"
     from_port   = 443
     to_port     = 443
     protocol    = "tcp"
-    cidr_blocks = ["${var.cidr}"]
+    cidr_blocks = local.cidr
   }
   egress {
     protocol    = "-1"
@@ -26,14 +26,14 @@ resource "aws_security_group" "ContainerSecurityGroup" {
   }
 
   tags = merge({ (join("-", ["${var.service_name}", "${aws_appconfig_application.AppConfigAgentApplication.id}"])) = "SecurityGroup" },
-    var.custom_resource_tags
+    local.common_tags
   )
 }
 
 resource "aws_security_group" "ContainerSecurityGroupWithLB" {
   count       = var.configure_load_balancer ? 1 : 0
   description = "${var.service_name}LBSecurityGroup-${aws_appconfig_application.AppConfigAgentApplication.id}"
-  vpc_id      = var.vpc
+  vpc_id      = data.aws_vpc.vpc.id
 
   ingress {
     description     = "CloudStorageSec Console port 80 ingress"
@@ -59,28 +59,28 @@ resource "aws_security_group" "ContainerSecurityGroupWithLB" {
   }
 
   tags = merge({ (join("-", ["${var.service_name}", "${aws_appconfig_application.AppConfigAgentApplication.id}"])) = "SecurityGroup" },
-    var.custom_resource_tags
+    local.common_tags
   )
 }
 
 resource "aws_security_group" "LoadBalancerSecurityGroup" {
   count       = var.configure_load_balancer ? 1 : 0
   description = "${var.service_name}LBSecurityGroup-${aws_appconfig_application.AppConfigAgentApplication.id}"
-  vpc_id      = var.vpc
+  vpc_id      = data.aws_vpc.vpc.id
 
   ingress {
     description = "TLS from VPC"
     from_port   = 80
     to_port     = 80
     protocol    = "tcp"
-    cidr_blocks = ["${var.cidr}"]
+    cidr_blocks = local.cidr
   }
   ingress {
     description = "TLS from VPC"
     from_port   = 443
     to_port     = 443
     protocol    = "tcp"
-    cidr_blocks = ["${var.cidr}"]
+    cidr_blocks = local.cidr
   }
 
   egress {
@@ -91,7 +91,7 @@ resource "aws_security_group" "LoadBalancerSecurityGroup" {
     description = "CloudStorageSec Console default egress to internet"
   }
   tags = merge({ (join("-", ["${var.service_name}", "${aws_appconfig_application.AppConfigAgentApplication.id}"])) = "SecurityGroup" },
-    var.custom_resource_tags
+    local.common_tags
   )
 }
 

@@ -3,11 +3,11 @@ resource "aws_appautoscaling_target" "AutoScalingTarget" {
   max_capacity       = 1
   min_capacity       = 1
   resource_id        = "service/${aws_ecs_cluster.Cluster.name}/${aws_ecs_service.Service[0].name}"
-  role_arn           = "arn:aws:iam::${var.aws_account}:role/aws-service-role/ecs.application-autoscaling.amazonaws.com/AWSServiceRoleForApplicationAutoScaling_ECSService"
+  role_arn           = "arn:aws:iam::${local.aws_account}:role/aws-service-role/ecs.application-autoscaling.amazonaws.com/AWSServiceRoleForApplicationAutoScaling_ECSService"
   scalable_dimension = "ecs:service:DesiredCount"
   service_namespace  = "ecs"
   tags = merge({ (join("-", ["${var.service_name}", "${aws_appconfig_application.AppConfigAgentApplication.id}"])) = "ConsoleAutoScaling" },
-    var.custom_resource_tags
+    local.common_tags
   )
 }
 
@@ -16,10 +16,10 @@ resource "aws_appautoscaling_target" "AutoScalingTargetWithLb" {
   max_capacity       = 1
   min_capacity       = 1
   resource_id        = "service/${aws_ecs_cluster.Cluster.name}/${aws_ecs_service.ServiceWithLB[0].name}"
-  role_arn           = "arn:aws:iam::${var.aws_account}:role/aws-service-role/ecs.application-autoscaling.amazonaws.com/AWSServiceRoleForApplicationAutoScaling_ECSService"
+  role_arn           = "arn:aws:iam::${local.aws_account}:role/aws-service-role/ecs.application-autoscaling.amazonaws.com/AWSServiceRoleForApplicationAutoScaling_ECSService"
   scalable_dimension = "ecs:service:DesiredCount"
   service_namespace  = "ecs"
   tags = merge({ (join("-", ["${var.service_name}", "${aws_appconfig_application.AppConfigAgentApplication.id}"])) = "ConsoleAutoScaling" },
-    var.custom_resource_tags
+    local.common_tags
   )
 }

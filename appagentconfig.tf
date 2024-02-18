@@ -7,7 +7,7 @@ resource "aws_appconfig_application" "AppConfigAgentApplication" {
   name        = "${var.service_name}-${random_id.stack.hex}"
   description = "AppConfig Application for CloudStorageSec Agents"
   tags = merge({ (join("-", ["${var.service_name}", "${random_id.stack.hex}"])) = "ConsoleAppConfig" },
-    var.custom_resource_tags
+    local.common_tags
   )
 }
 
@@ -16,7 +16,7 @@ resource "aws_appconfig_environment" "AppConfigAgentEnvironment" {
   description    = "AppConfig Environment for CloudStorageSec Agents"
   application_id = aws_appconfig_application.AppConfigAgentApplication.id
   tags = merge({ (join("-", ["${var.service_name}", "${aws_appconfig_application.AppConfigAgentApplication.id}"])) = "ConfigEnvironment" },
-    var.custom_resource_tags
+    local.common_tags
   )
 }
 
@@ -30,7 +30,7 @@ resource "aws_appconfig_deployment_strategy" "AppConfigAgentDeploymentStrategy" 
   replicate_to                   = "NONE"
 
   tags = merge({ (join("-", ["${var.service_name}", "${aws_appconfig_application.AppConfigAgentApplication.id}"])) = "ConfigStartegy" },
-    var.custom_resource_tags
+    local.common_tags
   )
 }
 
@@ -95,7 +95,7 @@ resource "aws_appconfig_configuration_profile" "AppConfigProfile" {
   location_uri       = "ssm-document://${awscc_ssm_document.AppConfigDocument.name}"
   retrieval_role_arn = aws_iam_role.AppConfigAgentConfigurationDocumentRole.arn
   tags = merge({ (join("-", ["${var.service_name}", "${aws_appconfig_application.AppConfigAgentApplication.id}"])) = "ConfigProfile" },
-    var.custom_resource_tags
+    local.common_tags
   )
 }
 
@@ -108,6 +108,6 @@ resource "aws_appconfig_deployment" "AppConfigAgentDeployment" {
   environment_id           = aws_appconfig_environment.AppConfigAgentEnvironment.environment_id
 
   tags = merge({ (join("-", ["${var.service_name}", "${aws_appconfig_application.AppConfigAgentApplication.id}"])) = "ConfigDeployment" },
-    var.custom_resource_tags
+    local.common_tags
   )
 }

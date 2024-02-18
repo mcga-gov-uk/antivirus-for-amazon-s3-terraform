@@ -1,7 +1,7 @@
 resource "aws_ecs_cluster" "Cluster" {
   name = "${var.service_name}Cluster-${aws_appconfig_application.AppConfigAgentApplication.id}"
   tags = merge({ (join("-", ["${var.service_name}", "${aws_appconfig_application.AppConfigAgentApplication.id}"])) = "ConsoleCluster" },
-    var.custom_resource_tags
+    local.common_tags
   )
 }
 
@@ -16,12 +16,12 @@ resource "aws_ecs_service" "Service" {
   launch_type                        = "FARGATE"
   platform_version                   = var.ecs_platform_version
   network_configuration {
-    subnets          = [var.subnet_a_id, var.subnet_b_id]
+    subnets          = [local.subnet_a_id, local.subnet_b_id]
     security_groups  = [aws_security_group.ContainerSecurityGroup[0].id]
     assign_public_ip = var.console_auto_assign_public_Ip
   }
   tags = merge({ (join("-", ["${var.service_name}", "${aws_appconfig_application.AppConfigAgentApplication.id}"])) = "ConsoleService" },
-    var.custom_resource_tags
+    local.common_tags
   )
 }
 
@@ -43,12 +43,12 @@ resource "aws_ecs_service" "ServiceWithLB" {
   }
 
   network_configuration {
-    subnets          = [var.subnet_a_id, var.subnet_b_id]
+    subnets          = [local.subnet_a_id, local.subnet_b_id]
     security_groups  = [aws_security_group.ContainerSecurityGroupWithLB[0].id]
     assign_public_ip = var.console_auto_assign_public_Ip
   }
   tags = merge({ (join("-", ["${var.service_name}", "${aws_appconfig_application.AppConfigAgentApplication.id}"])) = "ConsoleService" },
-    var.custom_resource_tags
+    local.common_tags
   )
 }
 
@@ -65,10 +65,10 @@ resource "aws_lb_target_group" "TargetGroup" {
     timeout  = var.hc_timeout
   }
   target_type          = "ip"
-  vpc_id               = var.vpc
+  vpc_id               = data.aws_vpc.vpc.id
   deregistration_delay = 60
   tags = merge({ (join("-", ["${var.service_name}", "${aws_appconfig_application.AppConfigAgentApplication.id}"])) = "ConsoleTargetGroup" },
-    var.custom_resource_tags
+    local.common_tags
   )
 }
 
@@ -85,7 +85,7 @@ resource "aws_lb_listener" "Listener" {
     target_group_arn = aws_lb_target_group.TargetGroup[0].arn
   }
   tags = merge({ (join("-", ["${var.service_name}", "${aws_appconfig_application.AppConfigAgentApplication.id}"])) = "ConsoleListener" },
-    var.custom_resource_tags
+    local.common_tags
   )
 }
 
@@ -96,8 +96,8 @@ resource "aws_lb" "LoadBalancer" {
   internal           = var.lb_scheme != "internet-facing"
   load_balancer_type = "application"
   security_groups    = [aws_security_group.LoadBalancerSecurityGroup[0].id]
-  subnets            = [var.subnet_a_id, var.subnet_b_id]
+  subnets            = [local.subnet_a_id, local.subnet_b_id]
   tags = merge({ (join("-", ["${var.service_name}", "${aws_appconfig_application.AppConfigAgentApplication.id}"])) = "ConsoleLoadBalancer" },
-    var.custom_resource_tags
+    local.common_tags
   )
 }

@@ -1,7 +1,7 @@
 output "ConsoleWebAddress" {
   description = "Public DNS address of Console Web Interface"
   sensitive   = false
-  value       = "${var.configure_load_balancer}" ? null : "https://${var.aws_account}-${aws_appconfig_application.AppConfigAgentApplication.id}.cloudstoragesecapp.com"
+  value       = "${var.configure_load_balancer}" ? null : "https://${local.aws_account}-${aws_appconfig_application.AppConfigAgentApplication.id}.cloudstoragesecapp.com"
 }
 
 output "LBWebAddress" {

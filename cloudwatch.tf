@@ -1,7 +1,7 @@
 resource "aws_cloudwatch_log_group" "cloudwatch_logs_group" {
   name = "${var.service_name}.ECS.${aws_appconfig_application.AppConfigAgentApplication.id}.Console"
   tags = merge({ (join("-", ["${var.service_name}", "${aws_appconfig_application.AppConfigAgentApplication.id}"])) = "ConsoleTargetGroup" },
-    var.custom_resource_tags
+    local.common_tags
   )
   retention_in_days = 7
 }
@@ -39,6 +39,6 @@ resource "aws_cloudwatch_event_bus" "proactive_notifications" {
   count = local.eventbridge_notifications_enabled ? 1 : 0
   name  = var.eventbridge_notifications_bus_name
   tags = merge({ (join("-", ["${var.service_name}", "${aws_appconfig_application.AppConfigAgentApplication.id}"])) = "ConsoleTargetGroup" },
-    var.custom_resource_tags
+    local.common_tags
   )
 }

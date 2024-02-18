@@ -112,7 +112,7 @@ resource "aws_ssm_parameter" "LargeFileEC2TagsParameter" {
 resource "aws_ssm_parameter" "SubdomainParameter" {
   name  = "/${var.parameter_prefix}-${aws_appconfig_application.AppConfigAgentApplication.id}/Config/Subdomain"
   type  = "String"
-  value = "${var.aws_account}-${aws_appconfig_application.AppConfigAgentApplication.id}"
+  value = "${local.aws_account}-${aws_appconfig_application.AppConfigAgentApplication.id}"
   lifecycle {
     ignore_changes = [value]
   }
