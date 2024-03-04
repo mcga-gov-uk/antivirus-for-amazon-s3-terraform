@@ -25,6 +25,11 @@ data "aws_ssm_parameter" "ui_alb_allow_ips" {
   name = "/${local.environment}/ui_alb/allowed_ips"
 }
 
-data "aws_nat_gateway" "vpc" {
+data "aws_nat_gateways" "vpc" {
   vpc_id = data.aws_vpc.vpc.id
+}
+
+data "aws_nat_gateway" "vpc" {
+  count = length(data.aws_nat_gateways.vpc.ids)
+  id = data.aws_nat_gateways.vpc.ids[count.index]
 }

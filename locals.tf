@@ -7,7 +7,8 @@ locals {
   aws_region   = data.aws_region.current.name
   aws_account  = data.aws_caller_identity.current.account_id
   whitelist_ips_restricted = [for addr in jsondecode(data.aws_ssm_parameter.ui_alb_allow_ips.insecure_value) : addr.ip]
-  cidr         = concat(formatlist(data.aws_vpc.vpc.cidr_block), local.whitelist_ips_restricted, formatlist("${data.aws_nat_gateway.vpc.public_ip}/32"))
+  cidr         = concat(formatlist(data.aws_vpc.vpc.cidr_block), local.whitelist_ips_restricted, formatlist("%s/32",data.aws_nat_gateway.vpc[*].public_ip))
+
   subnet_a_id  = data.aws_subnets.private.ids[0]
   subnet_b_id  = data.aws_subnets.private.ids[1]
   common_tags = {
